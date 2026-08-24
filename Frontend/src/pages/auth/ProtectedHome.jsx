@@ -7,7 +7,7 @@ const ProtectedHome = () => {
   const [status, setStatus] = useState('checking');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/auth/session', { withCredentials: true })
+    axios.get('/api/auth/session', { withCredentials: true })
       .then(() => setStatus('authenticated'))
       .catch(() => setStatus('anonymous'));
   }, []);

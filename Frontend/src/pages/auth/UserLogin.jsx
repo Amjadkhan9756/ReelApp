@@ -13,7 +13,7 @@ const UserLogin = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    const response = await axios.post("http://localhost:8080/api/auth/user/login", {
+    const response = await axios.post("/api/auth/user/login", {
       email,
       password
     }, { withCredentials: true });

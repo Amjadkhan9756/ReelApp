@@ -9,7 +9,7 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({
     storage,
-    limits: { fileSize: 100 * 1024 * 1024 },
+    limits: { fileSize: 4 * 1024 * 1024 },
     fileFilter: (req, file, callback) => {
         if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
             return callback(null, true);
@@ -22,7 +22,7 @@ function uploadMedia(req, res, next) {
     upload.single("media")(req, res, (error) => {
         if (!error) return next();
         if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
-            return res.status(413).json({ message: "Files must be 100MB or smaller" });
+            return res.status(413).json({ message: "Files must be 4MB or smaller on Vercel" });
         }
         if (error instanceof multer.MulterError && error.code === "LIMIT_UNEXPECTED_FILE") {
             return res.status(415).json({ message: "Only image and video files are supported" });

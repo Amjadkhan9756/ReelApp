@@ -13,14 +13,14 @@ const Profile = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.get('http://localhost:8080/api/auth/user/logout', { withCredentials: true });
+            await axios.get('/api/auth/user/logout', { withCredentials: true });
         } finally {
             navigate('/', { replace: true });
         }
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/food-partner/${id}`, { withCredentials: true })
+        axios.get(`/api/food-partner/${id}`, { withCredentials: true })
             .then(res => {
                 setProfile(res.data.foodPartner)
                 setVideos(res.data.foodPartner.foodItems)

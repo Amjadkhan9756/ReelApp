@@ -65,7 +65,7 @@ const CreateFood = () => {
         formData.append('media', mediaFile);
 
         try {
-            await axios.post("http://localhost:8080/api/food", formData, { withCredentials: true });
+            await axios.post("/api/food", formData, { withCredentials: true });
             navigate("/home");
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -117,7 +117,7 @@ const CreateFood = () => {
                                 <div className="file-dropzone-text">
                                     <strong>Tap to upload</strong> or drag and drop
                                 </div>
-                                <div className="file-hint">Images or videos • Up to 100MB</div>
+                                <div className="file-hint">Images or videos • Up to 4MB on Vercel</div>
                             </div>
                         </div>
 

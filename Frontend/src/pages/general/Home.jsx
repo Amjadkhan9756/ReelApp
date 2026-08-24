@@ -9,7 +9,7 @@ const Home = () => {
     const [videos, setVideos] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/food", { withCredentials: true })
+        axios.get("/api/food", { withCredentials: true })
             .then(res => {
                 console.log(res.data)
                 console.log('Videos:', res.data.foodItems)
@@ -21,7 +21,7 @@ const Home = () => {
     }, [])
 
     async function likeVideo(item) {
-        const response = await axios.post("http://localhost:8080/api/food/like", { foodId: item._id }, { withCredentials: true })
+        const response = await axios.post("/api/food/like", { foodId: item._id }, { withCredentials: true })
         if (response.data.like) {
             console.log("Video liked");
             setVideos((prev) => prev.map((v) => v._id  === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
@@ -34,7 +34,7 @@ const Home = () => {
 
 
     async function saveVideo(item) {
-        const response = await axios.post("http://localhost:8080/api/food/save", { foodId: item._id }, { withCredentials: true })
+        const response = await axios.post("/api/food/save", { foodId: item._id }, { withCredentials: true })
 
         if (response.data.save) {
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))

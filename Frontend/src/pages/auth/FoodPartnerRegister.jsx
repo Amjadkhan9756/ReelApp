@@ -21,7 +21,7 @@ const FoodPartnerRegister = () => {
     const contactName = e.target.contactName.value;
 
     try {
-      await axios.post("http://localhost:8080/api/auth/food-partner/register", {
+      await axios.post("/api/auth/food-partner/register", {
         name,
         email,
         password,

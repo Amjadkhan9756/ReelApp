@@ -1,6 +1,6 @@
 const foodModel = require("../models/food.model.js");
 const storageService = require('../services/storage.service.js');
-const { v4: uuid } = require("uuid");
+const { randomUUID } = require("crypto");
 
 async function createFood(req, res) {
     try {
@@ -18,7 +18,7 @@ async function createFood(req, res) {
         const extension = req.file.originalname.includes(".")
             ? req.file.originalname.slice(req.file.originalname.lastIndexOf(".")).toLowerCase()
             : "";
-        const filename = `${uuid()}${extension}`;
+        const filename = `${randomUUID()}${extension}`;
         const fileUploadResult = await storageService.uploadFile(req.file.buffer, filename);
 
         // 4️⃣ Create food item in DB
