@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../style/auth-shared.css';
+import '../../Style/auth-shared.css';
 
 const ChooseRegister = () => {
   return (
@@ -10,11 +10,11 @@ const ChooseRegister = () => {
           <h1 id="choose-register-title" className="auth-title">Register</h1>
           <p className="auth-subtitle">Pick how you want to join the platform.</p>
         </header>
-        <div style={{display:'flex', flexDirection:'column', gap:'16px'}}>
-          <Link to="/user/register" className="auth-submit" style={{textDecoration:'none'}}>
+        <div className="auth-choice-list">
+          <Link to="/user/register" className="auth-submit">
             Register as normal user
           </Link>
-          <Link to="/food-partner/register" className="auth-submit" style={{textDecoration:'none', background:'var(--color-surface-alt)', color:'var(--color-text)', border:'1px solid var(--color-border)'}}>
+          <Link to="/food-partner/register" className="auth-submit secondary">
             Register as food partner
           </Link>
         </div>

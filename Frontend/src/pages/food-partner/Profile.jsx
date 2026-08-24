@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
-import "../../style/profile.css";
+import { useNavigate, useParams } from 'react-router-dom';
+import "../../Style/profile.css";
 import axios from 'axios';
 
 
@@ -9,6 +9,15 @@ const Profile = () => {
     const { id } = useParams()
     const [profile, setProfile] = useState(null);
     const [videos, setVideos] = useState([]);
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await axios.get('http://localhost:8080/api/auth/user/logout', { withCredentials: true });
+        } finally {
+            navigate('/', { replace: true });
+        }
+    };
 
     useEffect(() => {
         axios.get(`http://localhost:8080/api/food-partner/${id}`, { withCredentials: true })
@@ -45,6 +54,7 @@ const Profile = () => {
                         <span className="profile-stat-value">{profile?.customersServed}</span>
                     </div>
                 </div>
+                <button className="profile-logout" type="button" onClick={handleLogout}>Log out</button>
             </section>
 
             <hr className="profile-sep" />

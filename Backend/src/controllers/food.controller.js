@@ -15,7 +15,10 @@ async function createFood(req, res) {
         }
 
         // 3️⃣ Upload file
-        const filename = `${uuid()}-${req.file.originalname}`;
+        const extension = req.file.originalname.includes(".")
+            ? req.file.originalname.slice(req.file.originalname.lastIndexOf(".")).toLowerCase()
+            : "";
+        const filename = `${uuid()}${extension}`;
         const fileUploadResult = await storageService.uploadFile(req.file.buffer, filename);
 
         // 4️⃣ Create food item in DB
@@ -23,6 +26,7 @@ async function createFood(req, res) {
             name: req.body.name,
             description: req.body.description,
             video: fileUploadResult.url,
+            mediaType: req.file.mimetype,
             foodPartner: req.foodPartner._id
         });
 

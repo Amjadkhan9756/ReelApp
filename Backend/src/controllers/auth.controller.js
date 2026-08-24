@@ -92,16 +92,26 @@ function logoutUser(req, res) {
 
 
 async function registerFoodPartner(req, res) {
+    try {
 
     const { name, email, password, phone, address, contactName } = req.body;
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+
+    if (!name?.trim() || !contactName?.trim() || !phone?.trim() || !address?.trim() || !normalizedEmail || !password) {
+        return res.status(400).json({ message: "All registration fields are required" });
+    }
+
+    if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
 
     const isAccountAlreadyExists = await foodPartnerModel.findOne({
-        email
+        email: normalizedEmail
     })
 
     if (isAccountAlreadyExists) {
         return res.status(400).json({
-            message: "Food partner account already exists"
+            message: "This email is already registered. Please sign in or use another email."
         })
     }
 
@@ -109,7 +119,7 @@ async function registerFoodPartner(req, res) {
 
     const foodPartner = await foodPartnerModel.create({
         name,
-        email,
+        email: normalizedEmail,
         password: hashedPassword,
         phone,
         address,
@@ -122,7 +132,7 @@ async function registerFoodPartner(req, res) {
 
     res.cookie("token", token)
 
-    res.status(201).json({
+    return res.status(201).json({
         message: "Food partner registered successfully",
         foodPartner: {
             _id: foodPartner._id,
@@ -132,7 +142,11 @@ async function registerFoodPartner(req, res) {
             contactName: foodPartner.contactName,
             phone: foodPartner.phone
         }
-    })
+    });
+    } catch (error) {
+        console.error("Food partner registration error:", error.message);
+        return res.status(503).json({ message: "Database unavailable. Please start MongoDB and try again." });
+    }
 
 }
 
@@ -140,11 +154,17 @@ async function registerFoodPartner(req, res) {
 
 
 async function loginFoodPartner(req, res) {
+    try {
 
     const { email, password } = req.body;
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+
+    if (!normalizedEmail || typeof password !== "string" || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+    }
 
     const foodPartner = await foodPartnerModel.findOne({
-        email
+        email: normalizedEmail
     })
 
     if (!foodPartner) {
@@ -167,14 +187,18 @@ async function loginFoodPartner(req, res) {
 
     res.cookie("token", token)
 
-    res.status(200).json({
+    return res.status(200).json({
         message: "Food partner logged in successfully",
         foodPartner: {
             _id: foodPartner._id,
             email: foodPartner.email,
             name: foodPartner.name
         }
-    })
+    });
+    } catch (error) {
+        console.error("Food partner login error:", error.message);
+        return res.status(503).json({ message: "Database unavailable. Please start MongoDB and try again." });
+    }
 }
 
 function logoutFoodPartner(req, res) {
@@ -182,6 +206,23 @@ function logoutFoodPartner(req, res) {
     res.status(200).json({
         message: "Food partner logged out successfully"
     });
+}
+
+async function getSession(req, res) {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ authenticated: false });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await userModel.findById(decoded.id).select("_id email fullName");
+        if (user) return res.status(200).json({ authenticated: true, role: "user", account: user });
+
+        const foodPartner = await foodPartnerModel.findById(decoded.id).select("_id email name");
+        if (foodPartner) return res.status(200).json({ authenticated: true, role: "food-partner", account: foodPartner });
+        return res.status(401).json({ authenticated: false });
+    } catch (err) {
+        return res.status(401).json({ authenticated: false });
+    }
 }
 
 
@@ -192,5 +233,6 @@ module.exports = {
     logoutUser,
     registerFoodPartner,
     loginFoodPartner,
-    logoutFoodPartner
+    logoutFoodPartner,
+    getSession
 }

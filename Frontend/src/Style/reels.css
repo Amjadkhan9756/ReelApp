@@ -6,7 +6,7 @@
 
 /* ── Page shell ── */
 .reels-page {
-  height: 100dvh;
+  height: calc(100dvh - 88px);
   background: #000;
   overflow: hidden;
   position: relative;
@@ -27,7 +27,7 @@
 /* ── Single reel card ── */
 .reel {
   position: relative;
-  height: 100dvh;
+  height: calc(100dvh - 88px);
   width: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;

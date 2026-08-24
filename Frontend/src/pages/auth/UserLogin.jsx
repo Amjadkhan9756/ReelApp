@@ -1,5 +1,5 @@
 import React from 'react';
-import "../../style/auth-shared.css"
+import "../../Style/auth-shared.css"
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const UserLogin = () => {
 
     console.log(response.data);
 
-    navigate("/"); // Redirect to home after login
+    navigate("/home");
 
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../style/auth-shared.css'
+import '../../Style/auth-shared.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +28,7 @@ const UserRegister = () => {
 
         console.log(response.data);
 
-        navigate("/")
+        navigate("/home")
 
     };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import ReelFeed from "../../components/ReelFeed";
-import "../../style/reels.css";
+import "../../Style/reels.css";
 
 
 

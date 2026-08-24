@@ -46,17 +46,21 @@ const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' 
 
         {items.map((item) => (
           <section key={item._id} className="reel" role="listitem">
-            <video
-              ref={setVideoRef(item._id)}
-              className="reel-video"
-              src={item.video}
-              muted
-              playsInline
-              loop
-              preload="metadata"
-              controls
-              onError={(e) => console.error('Video failed to load:', item.video, e)}
-            />
+            {item.mediaType?.startsWith('image/') ? (
+              <img className="reel-video" src={item.video} alt={item.name || 'Food post'} />
+            ) : (
+              <video
+                ref={setVideoRef(item._id)}
+                className="reel-video"
+                src={item.video}
+                muted
+                playsInline
+                loop
+                preload="metadata"
+                controls
+                onError={(e) => console.error('Video failed to load:', item.video, e)}
+              />
+            )}
 
             <div className="reel-overlay">
               <div className="reel-overlay-gradient" aria-hidden="true" />
