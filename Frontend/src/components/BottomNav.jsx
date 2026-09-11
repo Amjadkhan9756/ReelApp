@@ -5,6 +5,7 @@ import '../Style/bottom-nav.css'
 const BottomNav = () => {
   return (
     <nav className="bottom-nav" role="navigation" aria-label="Primary navigation">
+      <NavLink className="bottom-nav__brand" to="/">Reel<span>App</span></NavLink>
       <div className="bottom-nav__inner">
         <NavLink to="/home" className={({ isActive }) => `bottom-nav__item ${isActive ? 'is-active' : ''}`}>
           <span className="bottom-nav__icon" aria-hidden="true">

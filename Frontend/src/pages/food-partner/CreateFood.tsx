@@ -4,6 +4,8 @@ import axios from 'axios';
 import '../../Style/create-food.css'
 import { useNavigate } from 'react-router-dom';
 
+const MAX_MEDIA_SIZE = 20 * 1024 * 1024;
+
 const CreateFood = () => {
     const [ name, setName ] = useState('');
     const [ description, setDescription ] = useState('');
@@ -28,10 +30,22 @@ const CreateFood = () => {
 
     const isSupportedMedia = (file: File) => file.type.startsWith('video/') || file.type.startsWith('image/');
 
+    const validateMediaFile = (file: File, action: 'select' | 'drop') => {
+        if (!isSupportedMedia(file)) {
+            setFileError(`Please ${action} an image or video file.`);
+            return false;
+        }
+        if (file.size > MAX_MEDIA_SIZE) {
+            setFileError('Files must be 20MB or smaller.');
+            return false;
+        }
+        return true;
+    };
+
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files && e.target.files[ 0 ];
         if (!file) { setMediaFile(null); setFileError(''); return; }
-        if (!isSupportedMedia(file)) { setFileError('Please select an image or video file.'); return; }
+        if (!validateMediaFile(file, 'select')) { setMediaFile(null); return; }
         setFileError('');
         setMediaFile(file);
     };
@@ -41,7 +55,7 @@ const CreateFood = () => {
         e.stopPropagation();
         const file = e.dataTransfer?.files?.[ 0 ];
         if (!file) { return; }
-        if (!isSupportedMedia(file)) { setFileError('Please drop an image or video file.'); return; }
+        if (!validateMediaFile(file, 'drop')) { setMediaFile(null); return; }
         setFileError('');
         setMediaFile(file);
     };
@@ -117,7 +131,7 @@ const CreateFood = () => {
                                 <div className="file-dropzone-text">
                                     <strong>Tap to upload</strong> or drag and drop
                                 </div>
-                                <div className="file-hint">Images or videos • Up to 4MB on Vercel</div>
+                                <div className="file-hint">Images or videos • Up to 20MB</div>
                             </div>
                         </div>
 

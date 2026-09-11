@@ -7,7 +7,7 @@
 /* ── Page shell ── */
 .reels-page {
   height: calc(100dvh - 88px);
-  background: #000;
+  background: #fff;
   overflow: hidden;
   position: relative;
 }
@@ -466,7 +466,7 @@
 /* ── Desktop: centered phone frame ── */
 @media (min-width: 600px) {
   .reels-page {
-    background: #0a0a0a;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -475,7 +475,8 @@
     width: 390px;
     height: min(844px, 95dvh);
     border-radius: 20px;
-    box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.06);
+    border: 1px solid rgba(43,48,39,.14);
+    box-shadow: 4px 0 18px rgba(56,48,37,.08), -4px 0 18px rgba(56,48,37,.08);
   }
   .reel { height: min(844px, 95dvh); }
   .reel-bottom-nav {

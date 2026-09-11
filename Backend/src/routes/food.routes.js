@@ -4,12 +4,13 @@ const authMiddleware = require("../middleware/auth.middleware.js");
 const multer = require("multer");
 
 const router = express.Router();
+const MAX_MEDIA_SIZE = 20 * 1024 * 1024;
 
 // Multer memory storage
 const storage = multer.memoryStorage();
 const upload = multer({
     storage,
-    limits: { fileSize: 4 * 1024 * 1024 },
+    limits: { fileSize: MAX_MEDIA_SIZE },
     fileFilter: (req, file, callback) => {
         if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
             return callback(null, true);
@@ -22,7 +23,7 @@ function uploadMedia(req, res, next) {
     upload.single("media")(req, res, (error) => {
         if (!error) return next();
         if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
-            return res.status(413).json({ message: "Files must be 4MB or smaller on Vercel" });
+            return res.status(413).json({ message: "Files must be 20MB or smaller" });
         }
         if (error instanceof multer.MulterError && error.code === "LIMIT_UNEXPECTED_FILE") {
             return res.status(415).json({ message: "Only image and video files are supported" });
