@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import "../../Style/profile.css";
 import axios from 'axios';
@@ -9,6 +9,7 @@ const Profile = () => {
     const { id } = useParams()
     const [profile, setProfile] = useState(null);
     const [videos, setVideos] = useState([]);
+    const videoRefs = useRef(new Map()); // for playng videos inn profile
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -26,6 +27,30 @@ const Profile = () => {
                 setVideos(res.data.foodPartner.foodItems)
             })
     }, [id])
+//for playing videos in profile 
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const video = entry.target;
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    video.play().catch(() => { });
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: [0, 0.5, 1] });
+
+        videoRefs.current.forEach((video) => observer.observe(video));
+        return () => observer.disconnect();
+    }, [videos]);
+
+    const setVideoRef = (videoId) => (element) => {
+        if (element) {
+            videoRefs.current.set(videoId, element);
+        } else {
+            videoRefs.current.delete(videoId);
+        }
+    };
 
     return (
         <main className="profile-page">
@@ -62,12 +87,20 @@ const Profile = () => {
             <section className="profile-grid" aria-label="Videos">
                 {videos.map((v) => (
                     <div key={v._id || v.id} className="profile-grid-item">
-                        <video
-                            className="profile-grid-video"
-                            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                            src={v.video}
-                            muted
-                        ></video>
+                        {v.mediaType?.startsWith('image/') ? (
+                            <img className="profile-grid-video" src={v.video} alt={v.name || 'Food post'} />
+                        ) : (
+                            <video
+                                ref={setVideoRef(v._id || v.id)}
+                                className="profile-grid-video"
+                                src={v.video}
+                                muted
+                                playsInline
+                                loop
+                                preload="metadata"
+                                controls
+                            />
+                        )}
                     </div>
                 ))}
             </section>
