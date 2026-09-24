@@ -98,13 +98,13 @@ const CreateFood = () => {
         <div className="create-food-page">
             <div className="create-food-card">
                 <header className="create-food-header">
-                    <h1 className="create-food-title">Create Food</h1>
+                    <h1 className="create-food-title">Create videos</h1>
                     <p className="create-food-subtitle">Share a photo or video, give it a name, and add a description.</p>
                 </header>
 
                 <form className="create-food-form" onSubmit={onSubmit}>
                     <div className="field-group">
-                        <label htmlFor="foodVideo">Food Video</label>
+                        <label htmlFor="foodVideo"> Video</label>
                         <input
                             id="foodMedia"
                             ref={fileInputRef}

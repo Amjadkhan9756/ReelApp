@@ -71,7 +71,7 @@ const Profile = () => {
 
                 <div className="profile-stats" role="list" aria-label="Stats">
                     <div className="profile-stat" role="listitem">
-                        <span className="profile-stat-label">total meals</span>
+                        <span className="profile-stat-label">total videos</span>
                         <span className="profile-stat-value">{profile?.totalMeals}</span>
                     </div>
                     <div className="profile-stat" role="listitem">
@@ -88,7 +88,7 @@ const Profile = () => {
                 {videos.map((v) => (
                     <div key={v._id || v.id} className="profile-grid-item">
                         {v.mediaType?.startsWith('image/') ? (
-                            <img className="profile-grid-video" src={v.video} alt={v.name || 'Food post'} />
+                            <img className="profile-grid-video" src={v.video} alt={v.name || 'videos post'} />
                         ) : (
                             <video
                                 ref={setVideoRef(v._id || v.id)}
