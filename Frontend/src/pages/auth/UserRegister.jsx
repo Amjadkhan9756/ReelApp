@@ -37,10 +37,10 @@ const UserRegister = () => {
             <div className="auth-card" role="region" aria-labelledby="user-register-title">
                 <header>
                     <h1 id="user-register-title" className="auth-title">Create your account</h1>
-                    <p className="auth-subtitle">Join to explore and enjoy delicious meals.</p>
+                    <p className="auth-subtitle">Join to explore and enjoy videos.</p>
                 </header>
                 <nav className="auth-alt-action" style={{ marginTop: '-4px' }}>
-                    <strong style={{ fontWeight: 600 }}>Switch:</strong> <Link to="/user/register">User</Link> • <Link to="/food-partner/register">Food partner</Link>
+                    <strong style={{ fontWeight: 600 }}>Switch:</strong> <Link to="/user/register">User</Link> • <Link to="/food-partner/register">videos createrd </Link>
                 </nav>
                 <form className="auth-form" onSubmit={handleSubmit} noValidate>
                     <div className="two-col">

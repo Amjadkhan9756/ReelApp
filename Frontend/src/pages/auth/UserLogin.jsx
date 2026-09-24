@@ -29,16 +29,16 @@ const UserLogin = () => {
       <div className="auth-card" role="region" aria-labelledby="user-login-title">
         <header>
           <h1 id="user-login-title" className="auth-title">Welcome back</h1>
-          <p className="auth-subtitle">Sign in to continue your food journey.</p>
+          <p className="auth-subtitle">Sign in to continue your videos journey.</p>
         </header>
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="field-group">
             <label htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" />
+            <input id="email" name="email" type="email" placeholder="enter" autoComplete="email" />
           </div>
           <div className="field-group">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="••••••••" autoComplete="current-password" />
+            <input id="password" name="password" type="password" placeholder="Enter" autoComplete="current-password" />
           </div>
           <button className="auth-submit" type="submit">Sign In</button>
         </form>

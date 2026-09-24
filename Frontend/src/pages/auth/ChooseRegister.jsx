@@ -15,7 +15,7 @@ const ChooseRegister = () => {
             Register as normal user
           </Link>
           <Link to="/food-partner/register" className="auth-submit secondary">
-            Register as food partner
+            Register as videos creater and watcher
           </Link>
         </div>
         <div className="auth-alt-action" style={{marginTop:'4px'}}>

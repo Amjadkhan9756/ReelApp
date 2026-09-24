@@ -38,22 +38,22 @@ const FoodPartnerLogin = () => {
       <div className="auth-card" role="region" aria-labelledby="partner-login-title">
         <header>
           <h1 id="partner-login-title" className="auth-title">Partner Sign In</h1>
-          <p className="auth-subtitle">Sign in to manage your food uploads.</p>
+          <p className="auth-subtitle">Sign in to manage your Videos uploads.</p>
         </header>
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field-group">
             <label htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="you@example.com" autoComplete="email" required />
+            <input id="email" name="email" type="email" placeholder="Enter" autoComplete="email" required />
           </div>
           <div className="field-group">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="••••••••" autoComplete="current-password" required />
+            <input id="password" name="password" type="password" placeholder="Enter" autoComplete="current-password" required />
           </div>
           <button className="auth-submit" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Signing in...' : 'Sign In'}</button>
         </form>
         {errorMessage && <p className="auth-error" role="alert">{errorMessage}</p>}
         <div className="auth-alt-action">
-          New partner? <Link to="/food-partner/register">Create account</Link>
+          New createrd? <Link to="/food-partner/register">Create account</Link>
         </div>
       </div>
     </div>
