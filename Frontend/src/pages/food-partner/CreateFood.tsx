@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
-// @ts-ignore
 import '../../Style/create-food.css'
 import { useNavigate } from 'react-router-dom';
+import type { ApiErrorResponse, CreateFoodResponse } from '../../types';
 
 const MAX_MEDIA_SIZE = 20 * 1024 * 1024;
 
@@ -15,18 +15,22 @@ const CreateFood = () => {
     const [ submitError, setSubmitError ] = useState('');
     const [ isSubmitting, setIsSubmitting ] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const mediaURLRef = useRef('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!mediaFile) {
-            setMediaURL('');
-            return;
-        }
-        const url = URL.createObjectURL(mediaFile);
-        setMediaURL(url);
-        return () => URL.revokeObjectURL(url);
-    }, [ mediaFile ]);
+        return () => {
+            if (mediaURLRef.current) URL.revokeObjectURL(mediaURLRef.current);
+        };
+    }, []);
+
+    const updateMediaFile = (file: File | null) => {
+        if (mediaURLRef.current) URL.revokeObjectURL(mediaURLRef.current);
+        mediaURLRef.current = file ? URL.createObjectURL(file) : '';
+        setMediaURL(mediaURLRef.current);
+        setMediaFile(file);
+    };
 
     const isSupportedMedia = (file: File) => file.type.startsWith('video/') || file.type.startsWith('image/');
 
@@ -44,10 +48,10 @@ const CreateFood = () => {
 
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files && e.target.files[ 0 ];
-        if (!file) { setMediaFile(null); setFileError(''); return; }
-        if (!validateMediaFile(file, 'select')) { setMediaFile(null); return; }
+        if (!file) { updateMediaFile(null); setFileError(''); return; }
+        if (!validateMediaFile(file, 'select')) { updateMediaFile(null); return; }
         setFileError('');
-        setMediaFile(file);
+        updateMediaFile(file);
     };
 
     const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -55,9 +59,9 @@ const CreateFood = () => {
         e.stopPropagation();
         const file = e.dataTransfer?.files?.[ 0 ];
         if (!file) { return; }
-        if (!validateMediaFile(file, 'drop')) { setMediaFile(null); return; }
+        if (!validateMediaFile(file, 'drop')) { updateMediaFile(null); return; }
         setFileError('');
-        setMediaFile(file);
+        updateMediaFile(file);
     };
 
     const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -79,10 +83,10 @@ const CreateFood = () => {
         formData.append('media', mediaFile);
 
         try {
-            await axios.post("/api/food", formData, { withCredentials: true });
+            await axios.post<CreateFoodResponse>("/api/food", formData, { withCredentials: true });
             navigate("/home");
         } catch (error) {
-            if (axios.isAxiosError(error)) {
+            if (axios.isAxiosError<ApiErrorResponse>(error)) {
                 setSubmitError(error.response?.data?.message || 'Could not publish this post.');
             } else {
                 setSubmitError('Could not publish this post.');
@@ -146,7 +150,7 @@ const CreateFood = () => {
                                 <span className="file-chip-size">{(mediaFile.size / 1024 / 1024).toFixed(1)} MB</span>
                                 <div className="file-chip-actions">
                                     <button type="button" className="btn-ghost" onClick={openFileDialog}>Change</button>
-                                    <button type="button" className="btn-ghost danger" onClick={() => { setMediaFile(null); setFileError(''); }}>Remove</button>
+                                    <button type="button" className="btn-ghost danger" onClick={() => { updateMediaFile(null); setFileError(''); }}>Remove</button>
                                 </div>
                             </div>
                         )}
