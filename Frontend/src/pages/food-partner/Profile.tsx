@@ -79,11 +79,11 @@ const Profile = () => {
 
                 <div className="profile-stats" role="list" aria-label="Stats">
                     <div className="profile-stat" role="listitem">
-                        <span className="profile-stat-label">total videos</span>
+                        <span className="profile-stat-label">All Post</span>
                         <span className="profile-stat-value">{profile?.totalMeals}</span>
                     </div>
                     <div className="profile-stat" role="listitem">
-                        <span className="profile-stat-label">customer served</span>
+                        <span className="profile-stat-label">Custom Served</span>
                         <span className="profile-stat-value">{profile?.customersServed}</span>
                     </div>
                 </div>
