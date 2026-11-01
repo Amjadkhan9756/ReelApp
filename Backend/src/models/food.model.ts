@@ -7,7 +7,9 @@ export interface FoodDocument extends mongoose.Document {
   description?: string;
   foodPartner?: Types.ObjectId;
   likeCount: number;
+  likedBy: Types.ObjectId[];
   savesCount: number;
+  savedBy: Types.ObjectId[];
 }
 
 const foodSchema = new Schema<FoodDocument>({
@@ -34,9 +36,17 @@ const foodSchema = new Schema<FoodDocument>({
     type: Number,
     default: 0,
   },
+  likedBy: {
+    type: [Schema.Types.ObjectId],
+    default: [],
+  },
   savesCount: {
     type: Number,
     default: 0,
+  },
+  savedBy: {
+    type: [Schema.Types.ObjectId],
+    default: [],
   },
 });
 

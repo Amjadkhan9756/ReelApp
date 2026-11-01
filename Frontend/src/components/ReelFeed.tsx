@@ -44,6 +44,16 @@ const ReelFeed = ({
     videoRefs.current.set(id, el)
   }
 
+  // Tap on the video toggles play / pause (native controls removed)
+  const togglePlay = (e: React.MouseEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget
+    if (video.paused) {
+      video.play().catch(() => { /* ignore */ })
+    } else {
+      video.pause()
+    }
+  }
+
   return (
     <div className="reels-page">
       <div className="reels-feed" role="list">
@@ -67,54 +77,72 @@ const ReelFeed = ({
                 playsInline
                 loop
                 preload="metadata"
-                controls
+                onClick={togglePlay}
                 onError={(e) => console.error('Video failed to load:', item.video, e)}
               />
             )}
 
             <div className="reel-overlay">
-              <div className="reel-overlay-gradient" aria-hidden="true" />
               <div className="reel-actions">
+                {/* Like */}
                 <div className="reel-action-group">
                   <button
-                    onClick={onLike ? () => onLike(item) : undefined}
-                    className="reel-action"
-                    aria-label="Like"
+                    type="button"
+                    onClick={() => onLike?.(item)}
+                    className={`reel-action${item.liked ? ' liked' : ''}`}
+                    aria-label={item.liked ? 'Unlike' : 'Like'}
+                    aria-pressed={!!item.liked}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
                     </svg>
                   </button>
-                  <div className="reel-action__count">{item.likeCount ?? item.likesCount ?? item.likes ?? 0}</div>
+                  <div className="reel-action__count">
+                    {item.likeCount ?? item.likesCount ?? item.likes ?? 0}
+                  </div>
                 </div>
 
+                {/* Save */}
                 <div className="reel-action-group">
                   <button
-                    className="reel-action"
-                    onClick={onSave ? () => onSave(item) : undefined}
-                    aria-label="Bookmark"
+                    type="button"
+                    onClick={() => onSave?.(item)}
+                    className={`reel-action${item.saved ? ' saved' : ''}`}
+                    aria-label={item.saved ? 'Remove bookmark' : 'Bookmark'}
+                    aria-pressed={!!item.saved}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z" />
                     </svg>
                   </button>
-                  <div className="reel-action__count">{item.savesCount ?? item.bookmarks ?? item.saves ?? 0}</div>
+                  <div className="reel-action__count">
+                    {item.savesCount ?? item.bookmarks ?? item.saves ?? 0}
+                  </div>
                 </div>
 
+                {/* Comments */}
                 <div className="reel-action-group">
-                  <button className="reel-action" aria-label="Comments">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <button type="button" className="reel-action" aria-label="Comments">
+                    <svg viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
                     </svg>
                   </button>
-                  <div className="reel-action__count">{item.commentsCount ?? (Array.isArray(item.comments) ? item.comments.length : 0)}</div>
+                  <div className="reel-action__count">
+                    {item.commentsCount ?? (Array.isArray(item.comments) ? item.comments.length : 0)}
+                  </div>
                 </div>
               </div>
 
               <div className="reel-content">
                 <p className="reel-description" title={item.description}>{item.description}</p>
                 {item.foodPartner && (
-                  <Link className="reel-btn" to={"/food-partner/" + item.foodPartner} aria-label="Visit store">Visit Profile</Link>
+                  <Link
+                    className="reel-btn"
+                    to={'/food-partner/' + item.foodPartner}
+                    aria-label="Visit store"
+                  >
+                    Visit Profile
+                  </Link>
                 )}
               </div>
             </div>

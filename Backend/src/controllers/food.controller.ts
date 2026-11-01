@@ -13,13 +13,21 @@ interface FoodIdBody {
   foodId: string;
 }
 
+interface ToggleLikeBody extends FoodIdBody {
+  like?: boolean;
+}
+
+interface ToggleSaveBody extends FoodIdBody {
+  save?: boolean;
+}
+
 interface MessageResponse {
   message: string;
   error?: string;
 }
 
 interface LikeResponse extends MessageResponse {
-  like: true;
+  like: boolean;
   food: FoodDocument;
 }
 
@@ -92,9 +100,15 @@ const getFoodItems: RequestHandler<Record<string, string>, FoodResponse, unknown
   });
 };
 
-const likeFood: RequestHandler<Record<string, string>, FoodResponse, FoodIdBody> = async (req, res) => {
+const likeFood: RequestHandler<Record<string, string>, FoodResponse, ToggleLikeBody> = async (req, res) => {
   if (typeof req.body.foodId !== 'string' || !Types.ObjectId.isValid(req.body.foodId)) {
     res.status(400).json({ message: 'Invalid food ID' });
+    return;
+  }
+
+  const userId = req.user?._id;
+  if (!userId) {
+    res.status(401).json({ message: 'Please login first' });
     return;
   }
 
@@ -104,27 +118,46 @@ const likeFood: RequestHandler<Record<string, string>, FoodResponse, FoodIdBody>
     return;
   }
 
-  foodItem.likeCount = (foodItem.likeCount || 0) + 1;
+  const likedBy = Array.isArray(foodItem.likedBy) ? foodItem.likedBy : [];
+  const shouldLike = req.body.like !== undefined ? Boolean(req.body.like) : !likedBy.some((id) => id.toString() === userId.toString());
+
+  foodItem.likedBy = shouldLike
+    ? [...new Set([...likedBy.map((id) => id.toString()), userId.toString()])].map((id) => new Types.ObjectId(id))
+    : likedBy.filter((id) => id.toString() !== userId.toString());
+
+  foodItem.likeCount = foodItem.likedBy.length;
   await foodItem.save();
 
   res.status(200).json({
-    message: 'Food liked',
-    like: true,
+    message: shouldLike ? 'Food liked' : 'Food unliked',
+    like: shouldLike,
     food: foodItem,
   } satisfies LikeResponse);
 };
 
-const getSavedFoods: RequestHandler<Record<string, string>, FoodResponse, unknown> = async (_req, res) => {
-  const savedFoods = await foodModel.find({ savesCount: { $gt: 0 } });
+const getSavedFoods: RequestHandler<Record<string, string>, FoodResponse, unknown> = async (req, res) => {
+  const userId = req.user?._id;
+  if (!userId) {
+    res.status(401).json({ message: 'Please login first' });
+    return;
+  }
+
+  const savedFoods = await foodModel.find({ savedBy: userId });
   res.status(200).json({
     message: 'Saved foods fetched successfully',
     savedFoods: savedFoods.map((food) => ({ food })),
   });
 };
 
-const toggleSaveFood: RequestHandler<Record<string, string>, FoodResponse, FoodIdBody> = async (req, res) => {
+const toggleSaveFood: RequestHandler<Record<string, string>, FoodResponse, ToggleSaveBody> = async (req, res) => {
   if (typeof req.body.foodId !== 'string' || !Types.ObjectId.isValid(req.body.foodId)) {
     res.status(400).json({ message: 'Invalid food ID' });
+    return;
+  }
+
+  const userId = req.user?._id;
+  if (!userId) {
+    res.status(401).json({ message: 'Please login first' });
     return;
   }
 
@@ -134,13 +167,19 @@ const toggleSaveFood: RequestHandler<Record<string, string>, FoodResponse, FoodI
     return;
   }
 
-  const isSaved = (foodItem.savesCount || 0) === 0;
-  foodItem.savesCount = isSaved ? (foodItem.savesCount || 0) + 1 : Math.max(0, foodItem.savesCount - 1);
+  const savedBy = Array.isArray(foodItem.savedBy) ? foodItem.savedBy : [];
+  const shouldSave = req.body.save !== undefined ? Boolean(req.body.save) : !savedBy.some((id) => id.toString() === userId.toString());
+
+  foodItem.savedBy = shouldSave
+    ? [...new Set([...savedBy.map((id) => id.toString()), userId.toString()])].map((id) => new Types.ObjectId(id))
+    : savedBy.filter((id) => id.toString() !== userId.toString());
+
+  foodItem.savesCount = foodItem.savedBy.length;
   await foodItem.save();
 
   res.status(200).json({
-    message: isSaved ? 'Food saved' : 'Food unsaved',
-    save: isSaved,
+    message: shouldSave ? 'Food saved' : 'Food unsaved',
+    save: shouldSave,
     food: foodItem,
   } satisfies SaveResponse);
 };

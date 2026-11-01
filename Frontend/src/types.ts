@@ -7,9 +7,11 @@ export interface FoodItem {
   likeCount?: number;
   likesCount?: number;
   likes?: number;
+  liked?: boolean;
   savesCount?: number;
   bookmarks?: number;
   saves?: number;
+  saved?: boolean;
   commentsCount?: number;
   comments?: unknown[];
   foodPartner?: string;
