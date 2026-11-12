@@ -3,8 +3,8 @@ import cors from 'cors';
 import express, { type ErrorRequestHandler } from 'express';
 import path from 'node:path';
 import authRoutes from './routes/auth.routes.js';
-import foodPartnerRoutes from './routes/food-partner.routes.js';
-import foodRoutes from './routes/food.routes.js';
+import videoPartnerRoutes from './routes/video-partner.routes.js';
+import videoRoutes from './routes/video.routes.js';
 
 const app = express();
 
@@ -32,8 +32,8 @@ app.get('/', (_req, res) => {
   res.send('hello  world');
 });
 app.use('/api/auth', authRoutes);
-app.use('/api/food', foodRoutes);
-app.use('/api/food-partner', foodPartnerRoutes);
+app.use('/api/video', videoRoutes);
+app.use('/api/video-partner', videoPartnerRoutes);
 
 const errorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
   console.error('Request failed:', error);

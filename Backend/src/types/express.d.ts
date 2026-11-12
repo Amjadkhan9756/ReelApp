@@ -1,10 +1,10 @@
-import type { FoodPartnerDocument } from '../models/foodpartner.model.js';
+import type { VideoPartnerDocument } from '../models/video-partner.model.js';
 import type { UserDocument } from '../models/user.model.js';
 
 declare global {
   namespace Express {
     interface Request {
-      foodPartner?: FoodPartnerDocument | null;
+      videoPartner?: VideoPartnerDocument | null;
       user?: UserDocument | null;
     }
   }

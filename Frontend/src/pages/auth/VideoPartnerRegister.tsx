@@ -3,9 +3,9 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../Style/auth-shared.css'
 import axios from 'axios';
-import type { ApiErrorResponse, FoodPartnerAuthResponse } from '../../types';
+import type { ApiErrorResponse, VideoPartnerAuthResponse } from '../../types';
 
-const FoodPartnerRegister = () => {
+const VideoPartnerRegister = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -24,7 +24,7 @@ const FoodPartnerRegister = () => {
     const contactName = String(formData.get('contactName') ?? '');
 
     try {
-      await axios.post<FoodPartnerAuthResponse>("/api/auth/food-partner/register", {
+      await axios.post<VideoPartnerAuthResponse>("/api/auth/video-partner/register", {
         name,
         email,
         password,
@@ -48,11 +48,11 @@ const FoodPartnerRegister = () => {
     <div className="auth-page-wrapper">
       <div className="auth-card" role="region" aria-labelledby="partner-register-title">
         <header>
-          <h1 id="partner-register-title" className="auth-title">videos createrd Sign Up</h1>
-          <p className="auth-subtitle">Create your  account and start uploading videos.</p>
+          <h1 id="partner-register-title" className="auth-title">Create a video partner account</h1>
+          <p className="auth-subtitle">Create your account and start sharing videos.</p>
         </header>
         <nav className="auth-alt-action" style={{ marginTop: '-4px' }}>
-          <strong style={{ fontWeight: 600 }}>Switch:</strong> <Link to="/user/register">User</Link> • <Link to="/food-partner/register">videos creater </Link>
+          <strong style={{ fontWeight: 600 }}>Switch:</strong> <Link to="/user/register">User</Link> • <Link to="/video-partner/register">Video creator</Link>
         </nav>
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field-group">
@@ -83,11 +83,11 @@ const FoodPartnerRegister = () => {
         </form>
         {errorMessage && <p className="auth-error" role="alert">{errorMessage}</p>}
         <div className="auth-alt-action">
-          Already createrd? <Link to="/food-partner/login">Sign in</Link>
+          Already have an account? <Link to="/video-partner/login">Sign in</Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default FoodPartnerRegister;
+export default VideoPartnerRegister;

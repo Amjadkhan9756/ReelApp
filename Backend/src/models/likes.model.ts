@@ -2,7 +2,7 @@ import mongoose, { Schema, Types } from 'mongoose';
 
 interface LikeDocument extends mongoose.Document {
   user: Types.ObjectId;
-  food: Types.ObjectId;
+  video: Types.ObjectId;
 }
 
 const likeSchema = new Schema<LikeDocument>({
@@ -11,9 +11,9 @@ const likeSchema = new Schema<LikeDocument>({
     ref: 'user',
     required: true,
   },
-  food: {
+  video: {
     type: Schema.Types.ObjectId,
-    ref: 'food',
+    ref: 'video',
     required: true,
   },
 }, {

@@ -13,8 +13,8 @@ const ChooseRegister = () => {
           <Link to="/user/register" className="auth-submit">
             Register as normal user
           </Link>
-          <Link to="/food-partner/register" className="auth-submit secondary">
-            Register as videos creater and watcher
+          <Link to="/video-partner/register" className="auth-submit secondary">
+            Register as a video creator
           </Link>
         </div>
         <div className="auth-alt-action" style={{marginTop:'4px'}}>

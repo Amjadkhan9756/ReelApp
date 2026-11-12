@@ -3,9 +3,9 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../../Style/auth-shared.css'
 import axios from 'axios';
-import type { ApiErrorResponse, FoodPartnerAuthResponse } from '../../types';
+import type { ApiErrorResponse, VideoPartnerAuthResponse } from '../../types';
 
-const FoodPartnerLogin = () => {
+const VideoPartnerLogin = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -20,7 +20,7 @@ const FoodPartnerLogin = () => {
     const password = String(formData.get('password') ?? '');
 
     try {
-      await axios.post<FoodPartnerAuthResponse>("/api/auth/food-partner/login", {
+      await axios.post<VideoPartnerAuthResponse>("/api/auth/video-partner/login", {
         email,
         password
       }, { withCredentials: true });
@@ -41,7 +41,7 @@ const FoodPartnerLogin = () => {
       <div className="auth-card" role="region" aria-labelledby="partner-login-title">
         <header>
           <h1 id="partner-login-title" className="auth-title">Partner Sign In</h1>
-          <p className="auth-subtitle">Sign in to manage your Videos uploads.</p>
+          <p className="auth-subtitle">Sign in to manage your video posts.</p>
         </header>
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field-group">
@@ -56,11 +56,11 @@ const FoodPartnerLogin = () => {
         </form>
         {errorMessage && <p className="auth-error" role="alert">{errorMessage}</p>}
         <div className="auth-alt-action">
-          New createrd? <Link to="/food-partner/register">Create account</Link>
+          New here? <Link to="/video-partner/register">Create account</Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default FoodPartnerLogin;
+export default VideoPartnerLogin;

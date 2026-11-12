@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import type { CookieOptions, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 import type { Types } from 'mongoose';
-import foodPartnerModel from '../models/foodpartner.model.js';
+import videoPartnerModel from '../models/video-partner.model.js';
 import userModel from '../models/user.model.js';
 
 interface UserCredentials {
@@ -11,7 +11,7 @@ interface UserCredentials {
   password: string;
 }
 
-interface FoodPartnerCredentials {
+interface VideoPartnerCredentials {
   name: string;
   email: string;
   password: string;
@@ -37,8 +37,8 @@ interface UserAuthResponse extends MessageResponse {
   };
 }
 
-interface FoodPartnerAuthResponse extends MessageResponse {
-  foodPartner: {
+interface VideoPartnerAuthResponse extends MessageResponse {
+  videoPartner: {
     _id: Types.ObjectId;
     email: string;
     name: string;
@@ -60,7 +60,7 @@ interface AuthenticatedSessionResponse {
 
 interface AuthenticatedPartnerSessionResponse {
   authenticated: true;
-  role: 'food-partner';
+  role: 'video-partner';
   account: {
     _id: Types.ObjectId;
     email: string;
@@ -71,7 +71,7 @@ interface AuthenticatedPartnerSessionResponse {
 type AuthResponse =
   | MessageResponse
   | UserAuthResponse
-  | FoodPartnerAuthResponse
+  | VideoPartnerAuthResponse
   | AuthenticatedSessionResponse
   | AuthenticatedPartnerSessionResponse
   | { authenticated: false };
@@ -155,7 +155,7 @@ const logoutUser: RequestHandler<Record<string, string>, AuthResponse, unknown> 
   res.status(200).json({ message: 'user logged out successfully ' });
 };
 
-const registerFoodPartner: RequestHandler<Record<string, string>, AuthResponse, FoodPartnerCredentials> = async (req, res) => {
+const registerVideoPartner: RequestHandler<Record<string, string>, AuthResponse, VideoPartnerCredentials> = async (req, res) => {
   const { name, email, password, phone, address, contactName } = req.body;
   const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
@@ -176,7 +176,7 @@ const registerFoodPartner: RequestHandler<Record<string, string>, AuthResponse, 
     return;
   }
 
-  const existingPartner = await foodPartnerModel.findOne({ email: normalizedEmail });
+  const existingPartner = await videoPartnerModel.findOne({ email: normalizedEmail });
   if (existingPartner) {
     res.status(400).json({
       message: 'This email is already registered. Please sign in or use another email.',
@@ -185,7 +185,7 @@ const registerFoodPartner: RequestHandler<Record<string, string>, AuthResponse, 
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const foodPartner = await foodPartnerModel.create({
+  const videoPartner = await videoPartnerModel.create({
     name,
     email: normalizedEmail,
     password: hashedPassword,
@@ -194,21 +194,21 @@ const registerFoodPartner: RequestHandler<Record<string, string>, AuthResponse, 
     contactName,
   });
 
-  res.cookie('token', createToken(foodPartner._id.toString()), cookieOptions);
+  res.cookie('token', createToken(videoPartner._id.toString()), cookieOptions);
   res.status(201).json({
-    message: 'Food partner registered successfully',
-    foodPartner: {
-      _id: foodPartner._id,
-      email: foodPartner.email,
-      name: foodPartner.name,
-      address: foodPartner.address,
-      contactName: foodPartner.contactName,
-      phone: foodPartner.phone,
+    message: 'Video partner registered successfully',
+    videoPartner: {
+      _id: videoPartner._id,
+      email: videoPartner.email,
+      name: videoPartner.name,
+      address: videoPartner.address,
+      contactName: videoPartner.contactName,
+      phone: videoPartner.phone,
     },
   });
 };
 
-const loginFoodPartner: RequestHandler<Record<string, string>, AuthResponse, LoginCredentials> = async (req, res) => {
+const loginVideoPartner: RequestHandler<Record<string, string>, AuthResponse, LoginCredentials> = async (req, res) => {
   const { email, password } = req.body;
   const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
@@ -217,26 +217,26 @@ const loginFoodPartner: RequestHandler<Record<string, string>, AuthResponse, Log
     return;
   }
 
-  const foodPartner = await foodPartnerModel.findOne({ email: normalizedEmail });
-  if (!foodPartner || !(await bcrypt.compare(password, foodPartner.password))) {
+  const videoPartner = await videoPartnerModel.findOne({ email: normalizedEmail });
+  if (!videoPartner || !(await bcrypt.compare(password, videoPartner.password))) {
     res.status(400).json({ message: 'Invalid email or password' });
     return;
   }
 
-  res.cookie('token', createToken(foodPartner._id.toString()), cookieOptions);
+  res.cookie('token', createToken(videoPartner._id.toString()), cookieOptions);
   res.status(200).json({
-    message: 'Food partner logged in successfully',
-    foodPartner: {
-      _id: foodPartner._id,
-      email: foodPartner.email,
-      name: foodPartner.name,
+    message: 'Video partner logged in successfully',
+    videoPartner: {
+      _id: videoPartner._id,
+      email: videoPartner.email,
+      name: videoPartner.name,
     },
   });
 };
 
-const logoutFoodPartner: RequestHandler<Record<string, string>, AuthResponse, unknown> = (_req, res) => {
+const logoutVideoPartner: RequestHandler<Record<string, string>, AuthResponse, unknown> = (_req, res) => {
   res.clearCookie('token');
-  res.status(200).json({ message: 'Food partner logged out successfully' });
+  res.status(200).json({ message: 'Video partner logged out successfully' });
 };
 
 const getSession: RequestHandler<Record<string, string>, AuthResponse, unknown> = async (req, res) => {
@@ -271,12 +271,12 @@ const getSession: RequestHandler<Record<string, string>, AuthResponse, unknown> 
     return;
   }
 
-  const foodPartner = await foodPartnerModel.findById(decoded.id).select('_id email name');
-  if (foodPartner) {
+  const videoPartner = await videoPartnerModel.findById(decoded.id).select('_id email name');
+  if (videoPartner) {
     const response: AuthenticatedPartnerSessionResponse = {
       authenticated: true,
-      role: 'food-partner',
-      account: foodPartner,
+      role: 'video-partner',
+      account: videoPartner,
     };
     res.status(200).json(response);
     return;
@@ -288,8 +288,8 @@ export const authController = {
   registerUser,
   loginUser,
   logoutUser,
-  registerFoodPartner,
-  loginFoodPartner,
-  logoutFoodPartner,
+  registerVideoPartner,
+  loginVideoPartner,
+  logoutVideoPartner,
   getSession,
 };

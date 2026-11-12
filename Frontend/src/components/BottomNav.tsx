@@ -17,7 +17,7 @@ const BottomNav = () => {
           <span className="bottom-nav__label">Reels</span>
         </NavLink>
 
-        <NavLink to="/create-food" className={({ isActive }) => `bottom-nav__item bottom-nav__post ${isActive ? 'is-active' : ''}`}>
+        <NavLink to="/create-video" className={({ isActive }) => `bottom-nav__item bottom-nav__post ${isActive ? 'is-active' : ''}`}>
           <span className="bottom-nav__icon bottom-nav__plus" aria-hidden="true">+</span>
           <span className="bottom-nav__label">Post Reel</span>
         </NavLink>

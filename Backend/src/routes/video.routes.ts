@@ -1,8 +1,8 @@
 import { Router, type RequestHandler } from 'express';
 import multer from 'multer';
-import { foodController } from '../controllers/food.controller.js';
+import { videoController } from '../controllers/video.controller.js';
 import {
-    authFoodPartnerMiddleware,
+    authVideoPartnerMiddleware,
     authUserMiddleware,
 } from '../middleware/auth.middleware.js';
 
@@ -35,36 +35,36 @@ const uploadMedia: RequestHandler<Record<string, string>, { message: string }, u
     });
 }
 
-// POST /api/food
+// POST /api/video
 router.post(
     "/",
-    authFoodPartnerMiddleware,
+    authVideoPartnerMiddleware,
     uploadMedia,
-    foodController.createFood
+    videoController.createVideo
 );
 
-// GET /api/food
+// GET /api/video   
 router.get(
     "/",
-    foodController.getFoodItems
+    videoController.getVideoItems
 );
 
 router.post(
     "/like",
     authUserMiddleware,
-    foodController.likeFood
+    videoController.likeVideo
 );
 
 router.get(
     "/save",
     authUserMiddleware,
-    foodController.getSavedFoods
+    videoController.getSavedVideos
 );
 
 router.post(
     "/save",
     authUserMiddleware,
-    foodController.toggleSaveFood
+    videoController.toggleSaveVideo
 );
 
 export default router;

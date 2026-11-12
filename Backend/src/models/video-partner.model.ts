@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-export interface FoodPartnerDocument extends mongoose.Document {
+export interface VideoPartnerDocument extends mongoose.Document {
   name: string;
   contactName: string;
   phone: string;
@@ -9,7 +9,7 @@ export interface FoodPartnerDocument extends mongoose.Document {
   password: string;
 }
 
-const foodPartnerSchema = new Schema<FoodPartnerDocument>({
+const videoPartnerSchema = new Schema<VideoPartnerDocument>({
   name: {
     type: String,
     required: true,
@@ -37,4 +37,4 @@ const foodPartnerSchema = new Schema<FoodPartnerDocument>({
   },
 });
 
-export default mongoose.model<FoodPartnerDocument>('foodpartner', foodPartnerSchema);
+export default mongoose.model<VideoPartnerDocument>('videopartner', videoPartnerSchema);

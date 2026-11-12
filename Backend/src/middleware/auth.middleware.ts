@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
-import foodPartnerModel from '../models/foodpartner.model.js';
+import videoPartnerModel from '../models/video-partner.model.js';
 import userModel from '../models/user.model.js';
 
 interface AuthErrorResponse {
@@ -25,7 +25,7 @@ function getAccountId(token: string): string | null {
   }
 }
 
-export const authFoodPartnerMiddleware: RequestHandler<
+export const authVideoPartnerMiddleware: RequestHandler<
   Record<string, string>,
   AuthErrorResponse,
   unknown
@@ -43,8 +43,8 @@ export const authFoodPartnerMiddleware: RequestHandler<
     return;
   }
 
-  req.foodPartner = await foodPartnerModel.findById(accountId);
-  if (!req.foodPartner) {
+  req.videoPartner = await videoPartnerModel.findById(accountId);
+  if (!req.videoPartner) {
     res.status(401).json({ message: 'Invalid token' });
     return;
   }

@@ -1,18 +1,18 @@
 import mongoose, { Schema, Types } from 'mongoose';
 
-export interface FoodDocument extends mongoose.Document {
+export interface VideoDocument extends mongoose.Document {
   name: string;
   video: string;
   mediaType: string;
   description?: string;
-  foodPartner?: Types.ObjectId;
+  videoPartner?: Types.ObjectId;
   likeCount: number;
   likedBy: Types.ObjectId[];
   savesCount: number;
   savedBy: Types.ObjectId[];
 }
 
-const foodSchema = new Schema<FoodDocument>({
+const videoSchema = new Schema<VideoDocument>({
   name: {
     type: String,
     required: true,
@@ -28,9 +28,9 @@ const foodSchema = new Schema<FoodDocument>({
   description: {
     type: String,
   },
-  foodPartner: {
+  videoPartner: {
     type: Schema.Types.ObjectId,
-    ref: 'foodpartner',
+    ref: 'videopartner',
   },
   likeCount: {
     type: Number,
@@ -50,4 +50,4 @@ const foodSchema = new Schema<FoodDocument>({
   },
 });
 
-export default mongoose.model<FoodDocument>('food', foodSchema);
+export default mongoose.model<VideoDocument>('video', videoSchema);

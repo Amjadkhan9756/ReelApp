@@ -2,28 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import ReelFeed from "../../components/ReelFeed";
 import "../../Style/reels.css";
-import type { FoodItem, FoodItemsResponse, LikeFoodResponse, ToggleSaveFoodResponse } from "../../types";
+import type { VideoItem, VideoItemsResponse, LikeVideoResponse, ToggleSaveVideoResponse } from "../../types";
 import { getApiErrorMessage } from "../../apiError";
 
 const Home = () => {
-    const [videos, setVideos] = useState<FoodItem[]>([]);
+    const [videos, setVideos] = useState<VideoItem[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     // Prevents double-clicks / overlapping requests for the same video
     const pending = useRef(new Set<string>());
 
     useEffect(() => {
-        axios.get<FoodItemsResponse>("/api/food", { withCredentials: true })
-            .then((res) => setVideos(res.data.foodItems))
+        axios.get<VideoItemsResponse>("/api/video", { withCredentials: true })
+            .then((res) => setVideos(res.data.videoItems))
             .catch((error: unknown) => {
                 console.error("Load error:", error);
                 setErrorMessage(getApiErrorMessage(error, "Could not load videos. Please try again."));
             });
     }, []);
 
-    const patchVideo = (id: string, patch: Partial<FoodItem>) =>
+    const patchVideo = (id: string, patch: Partial<VideoItem>) =>
         setVideos((prev) => prev.map((v) => (v._id === id ? { ...v, ...patch } : v)));
 
-    async function likeVideo(item: FoodItem) {
+    async function likeVideo(item: VideoItem) {
         const key = `like:${item._id}`;
         if (pending.current.has(key)) return;   // ignore clicks while request is running
         pending.current.add(key);
@@ -41,9 +41,9 @@ const Home = () => {
 
         try {
             // We trust our own count; the server response is not used to overwrite it
-            await axios.post<LikeFoodResponse>(
-                "/api/food/like",
-                { foodId: item._id, like: shouldLike },
+            await axios.post<LikeVideoResponse>(
+                "/api/video/like",
+                { videoId: item._id, like: shouldLike },
                 { withCredentials: true }
             );
         } catch (error: unknown) {
@@ -60,7 +60,7 @@ const Home = () => {
         }
     }
 
-    async function saveVideo(item: FoodItem) {
+    async function saveVideo(item: VideoItem) {
         const key = `save:${item._id}`;
         if (pending.current.has(key)) return;
         pending.current.add(key);
@@ -78,9 +78,9 @@ const Home = () => {
         });
 
         try {
-            await axios.post<ToggleSaveFoodResponse>(
-                "/api/food/save",
-                { foodId: item._id, save: shouldSave },
+            await axios.post<ToggleSaveVideoResponse>(
+                "/api/video/save",
+                { videoId: item._id, save: shouldSave },
                 { withCredentials: true }
             );
         } catch (error: unknown) {

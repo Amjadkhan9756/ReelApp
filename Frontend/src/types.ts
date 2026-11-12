@@ -1,4 +1,4 @@
-export interface FoodItem {
+export interface VideoItem {
   _id: string;
   video: string;
   mediaType?: string;
@@ -14,20 +14,19 @@ export interface FoodItem {
   saved?: boolean;
   commentsCount?: number;
   comments?: unknown[];
-  foodPartner?: string;
+  videoPartner?: string;
 }
 
-export interface FoodPartnerProfile {
+export interface VideoPartnerProfile {
   _id: string;
   name?: string;
   address?: string;
-  totalMeals?: number;
-  customersServed?: number;
-  foodItems: FoodItem[];
+  contactName?: string;
+  videoItems: VideoItem[];
 }
 
-export interface FoodPartnerProfileResponse extends ApiMessageResponse {
-  foodPartner: FoodPartnerProfile;
+export interface VideoPartnerProfileResponse extends ApiMessageResponse {
+  videoPartner: VideoPartnerProfile;
 }
 
 export interface ApiMessageResponse {
@@ -45,7 +44,7 @@ export interface UserAccount {
   fullName: string;
 }
 
-export interface FoodPartnerAccount {
+export interface VideoPartnerAccount {
   _id: string;
   email: string;
   name: string;
@@ -58,33 +57,33 @@ export interface UserAuthResponse extends ApiMessageResponse {
   user: UserAccount;
 }
 
-export interface FoodPartnerAuthResponse extends ApiMessageResponse {
-  foodPartner: FoodPartnerAccount;
+export interface VideoPartnerAuthResponse extends ApiMessageResponse {
+  videoPartner: VideoPartnerAccount;
 }
 
 export type AuthSessionResponse =
   | { authenticated: false }
   | { authenticated: true; role: 'user'; account: UserAccount }
-  | { authenticated: true; role: 'food-partner'; account: Pick<FoodPartnerAccount, '_id' | 'email' | 'name'> };
+  | { authenticated: true; role: 'video-partner'; account: Pick<VideoPartnerAccount, '_id' | 'email' | 'name'> };
 
-export interface FoodItemsResponse extends ApiMessageResponse {
-  foodItems: FoodItem[];
+export interface VideoItemsResponse extends ApiMessageResponse {
+  videoItems: VideoItem[];
 }
 
-export interface SavedFoodsResponse extends ApiMessageResponse {
-  savedFoods: Array<{ food: FoodItem }>;
+export interface SavedVideosResponse extends ApiMessageResponse {
+  savedVideos: Array<{ video: VideoItem }>;
 }
 
-export interface LikeFoodResponse extends ApiMessageResponse {
+export interface LikeVideoResponse extends ApiMessageResponse {
   like: boolean;
-  food: FoodItem;
+  video: VideoItem;
 }
 
-export interface ToggleSaveFoodResponse extends ApiMessageResponse {
+export interface ToggleSaveVideoResponse extends ApiMessageResponse {
   save: boolean;
-  food: FoodItem;
+  video: VideoItem;
 }
 
-export interface CreateFoodResponse extends ApiMessageResponse {
-  food: FoodItem;
+export interface CreateVideoResponse extends ApiMessageResponse {
+  video: VideoItem;
 }

@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import type { FoodItem } from '../types'
+import type { VideoItem } from '../types'
 
 interface ReelFeedProps {
-  items?: FoodItem[];
-  onLike?: (item: FoodItem) => void | Promise<void>;
-  onSave?: (item: FoodItem) => void | Promise<void>;
+  items?: VideoItem[];
+  onLike?: (item: VideoItem) => void | Promise<void>;
+  onSave?: (item: VideoItem) => void | Promise<void>;
   emptyMessage?: string;
   errorMessage?: string;
 }
@@ -67,7 +67,7 @@ const ReelFeed = ({
         {items.map((item) => (
           <section key={item._id} className="reel" role="listitem">
             {item.mediaType?.startsWith('image/') ? (
-              <img className="reel-video" src={item.video} alt={item.name || 'Food post'} />
+              <img className="reel-video" src={item.video} alt={item.name || 'Video post'} />
             ) : (
               <video
                 ref={setVideoRef(item._id)}
@@ -135,11 +135,11 @@ const ReelFeed = ({
 
               <div className="reel-content">
                 <p className="reel-description" title={item.description}>{item.description}</p>
-                {item.foodPartner && (
+                {item.videoPartner && (
                   <Link
                     className="reel-btn"
-                    to={'/food-partner/' + item.foodPartner}
-                    aria-label="Visit store"
+                    to={'/video-partner/' + item.videoPartner}
+                    aria-label="Visit creator profile"
                   >
                     Visit Profile
                   </Link>

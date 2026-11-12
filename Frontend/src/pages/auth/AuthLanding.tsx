@@ -12,7 +12,7 @@ const AuthLanding = () => (
         <Link to="/user/login" className="auth-submit">Log in</Link>
         <Link to="/register" className="auth-submit secondary">Register</Link>
       </div>
-      <p className="auth-alt-action">videos createrd? <Link to="/food-partner/login">createrd sign in</Link></p>
+      <p className="auth-alt-action">Are you a video creator? <Link to="/video-partner/login">Sign in</Link></p>
     </div>
   </div>
 );

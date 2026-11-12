@@ -2,22 +2,22 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "../../Style/profile.css";
 import axios from 'axios';
-import type { ApiMessageResponse, FoodItem, FoodPartnerProfile, FoodPartnerProfileResponse } from '../../types';
+import type { ApiMessageResponse, VideoItem, VideoPartnerProfile, VideoPartnerProfileResponse } from '../../types';
 import { getApiErrorMessage } from '../../apiError';
 
 
 
 const Profile = () => {
     const { id } = useParams();
-    const [profile, setProfile] = useState<FoodPartnerProfile | null>(null);
-    const [videos, setVideos] = useState<FoodItem[]>([]);
+    const [profile, setProfile] = useState<VideoPartnerProfile | null>(null);
+    const [videos, setVideos] = useState<VideoItem[]>([]);
     const [errorMessage, setErrorMessage] = useState('');
     const videoRefs = useRef(new Map<string, HTMLVideoElement>());
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
-            await axios.get<ApiMessageResponse>('/api/auth/user/logout', { withCredentials: true });
+            await axios.get<ApiMessageResponse>('/api/auth/video-partner/logout', { withCredentials: true });
         } finally {
             navigate('/', { replace: true });
         }
@@ -25,10 +25,10 @@ const Profile = () => {
 
     useEffect(() => {
         if (!id) return;
-        axios.get<FoodPartnerProfileResponse>(`/api/food-partner/${id}`, { withCredentials: true })
+        axios.get<VideoPartnerProfileResponse>(`/api/video-partner/${id}`, { withCredentials: true })
             .then(res => {
-                setProfile(res.data.foodPartner)
-                setVideos(res.data.foodPartner.foodItems)
+                setProfile(res.data.videoPartner)
+                setVideos(res.data.videoPartner.videoItems)
             })
             .catch((error: unknown) => {
                 setErrorMessage(getApiErrorMessage(error, 'Could not load this profile. Please try again.'));
@@ -79,12 +79,12 @@ const Profile = () => {
 
                 <div className="profile-stats" role="list" aria-label="Stats">
                     <div className="profile-stat" role="listitem">
-                        <span className="profile-stat-label">All Post</span>
-                        <span className="profile-stat-value">{profile?.totalMeals}</span>
+                        <span className="profile-stat-label">Videos</span>
+                        <span className="profile-stat-value">{videos.length}</span>
                     </div>
                     <div className="profile-stat" role="listitem">
-                        <span className="profile-stat-label">Custom Served</span>
-                        <span className="profile-stat-value">{profile?.customersServed}</span>
+                        <span className="profile-stat-label">Contact</span>
+                        <span className="profile-stat-value">{profile?.contactName}</span>
                     </div>
                 </div>
                 <button className="profile-logout" type="button" onClick={handleLogout}>Log out</button>
@@ -97,7 +97,7 @@ const Profile = () => {
                 {videos.map((v) => (
                     <div key={v._id} className="profile-grid-item">
                         {v.mediaType?.startsWith('image/') ? (
-                            <img className="profile-grid-video" src={v.video} alt={v.name || 'videos post'} />
+                            <img className="profile-grid-video" src={v.video} alt={v.name || 'Video post'} />
                         ) : (
                             <video
                                 ref={setVideoRef(v._id)}

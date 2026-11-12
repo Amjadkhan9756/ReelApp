@@ -1,36 +1,36 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import ReelFeed from '../../components/ReelFeed'
-import type { FoodItem, SavedFoodsResponse, ToggleSaveFoodResponse } from '../../types'
+import type { VideoItem, SavedVideosResponse, ToggleSaveVideoResponse } from '../../types'
 import { getApiErrorMessage } from '../../apiError'
 
 const Saved = () => {
-    const [ videos, setVideos ] = useState<FoodItem[]>([])
+    const [ videos, setVideos ] = useState<VideoItem[]>([])
     const [ errorMessage, setErrorMessage ] = useState('')
 
     useEffect(() => {
-        axios.get<SavedFoodsResponse>("/api/food/save", { withCredentials: true })
+        axios.get<SavedVideosResponse>("/api/video/save", { withCredentials: true })
             .then(response => {
-                const savedFoods = response.data.savedFoods.map((item) => ({
-                    _id: item.food._id,
-                    video: item.food.video,
-                    description: item.food.description,
-                    likeCount: item.food.likeCount,
-                    savesCount: item.food.savesCount,
-                    commentsCount: item.food.commentsCount,
-                    foodPartner: item.food.foodPartner,
+                const savedVideos = response.data.savedVideos.map((item) => ({
+                    _id: item.video._id,
+                    video: item.video.video,
+                    description: item.video.description,
+                    likeCount: item.video.likeCount,
+                    savesCount: item.video.savesCount,
+                    commentsCount: item.video.commentsCount,
+                    videoPartner: item.video.videoPartner,
                 }))
-                setVideos(savedFoods)
+                setVideos(savedVideos)
             })
             .catch((error: unknown) => {
                 setErrorMessage(getApiErrorMessage(error, 'Could not load saved videos. Please try again.'));
             })
     }, [])
 
-    const removeSaved = async (item: FoodItem) => {
+    const removeSaved = async (item: VideoItem) => {
         setErrorMessage('');
         try {
-            await axios.post<ToggleSaveFoodResponse>("/api/food/save", { foodId: item._id }, { withCredentials: true })
+            await axios.post<ToggleSaveVideoResponse>("/api/video/save", { videoId: item._id, save: false }, { withCredentials: true })
             setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: Math.max(0, (v.savesCount ?? 1) - 1) } : v))
         } catch (error: unknown) {
             setErrorMessage(getApiErrorMessage(error, 'Could not remove this saved video. Please try again.'));

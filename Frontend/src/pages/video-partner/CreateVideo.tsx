@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
-import '../../Style/create-food.css'
+import '../../Style/create-video.css'
 import { useNavigate } from 'react-router-dom';
-import type { ApiErrorResponse, CreateFoodResponse } from '../../types';
+import type { ApiErrorResponse, CreateVideoResponse } from '../../types';
 
 const MAX_MEDIA_SIZE = 20 * 1024 * 1024;
 
-const CreateFood = () => {
+const CreateVideo = () => {
     const [ name, setName ] = useState('');
     const [ description, setDescription ] = useState('');
     const [ mediaFile, setMediaFile ] = useState<File | null>(null);
@@ -83,7 +83,7 @@ const CreateFood = () => {
         formData.append('media', mediaFile);
 
         try {
-            await axios.post<CreateFoodResponse>("/api/food", formData, { withCredentials: true });
+            await axios.post<CreateVideoResponse>("/api/video", formData, { withCredentials: true });
             navigate("/home");
         } catch (error) {
             if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -99,18 +99,18 @@ const CreateFood = () => {
     const isDisabled = useMemo(() => !name.trim() || !mediaFile || isSubmitting, [ name, mediaFile, isSubmitting ]);
 
     return (
-        <div className="create-food-page">
-            <div className="create-food-card">
-                <header className="create-food-header">
-                    <h1 className="create-food-title">Create videos</h1>
-                    <p className="create-food-subtitle">Share a photo or video, give it a name, and add a description.</p>
+        <div className="create-video-page">
+            <div className="create-video-card">
+                <header className="create-video-header">
+                    <h1 className="create-video-title">Create a post</h1>
+                    <p className="create-video-subtitle">Share a video, give it a name, and add a description.</p>
                 </header>
 
-                <form className="create-food-form" onSubmit={onSubmit}>
+                <form className="create-video-form" onSubmit={onSubmit}>
                     <div className="field-group">
-                        <label htmlFor="foodVideo"> Video</label>
+                        <label htmlFor="videoMedia">Video</label>
                         <input
-                            id="foodMedia"
+                            id="videoMedia"
                             ref={fileInputRef}
                             className="file-input-hidden"
                             type="file"
@@ -167,11 +167,11 @@ const CreateFood = () => {
                     )}
 
                     <div className="field-group">
-                        <label htmlFor="foodName">Name</label>
+                        <label htmlFor="videoName">Name</label>
                         <input
-                            id="foodName"
+                            id="videoName"
                             type="text"
-                            placeholder="e.g., Spicy Paneer Wrap"
+                            placeholder="Give your post a name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
@@ -179,11 +179,11 @@ const CreateFood = () => {
                     </div>
 
                     <div className="field-group">
-                        <label htmlFor="foodDesc">Description</label>
+                        <label htmlFor="videoDesc">Description</label>
                         <textarea
-                            id="foodDesc"
+                            id="videoDesc"
                             rows={4}
-                            placeholder="Write a short description: ingredients, taste, spice level, etc."
+                            placeholder="Write a short description of your post."
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
@@ -201,4 +201,4 @@ const CreateFood = () => {
     );
 };
 
-export default CreateFood;
+export default CreateVideo;

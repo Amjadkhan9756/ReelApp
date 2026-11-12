@@ -12,10 +12,10 @@ router.get('/user/logout', authController.logoutUser);
 
 
 
-// food partner auth APIs
-router.post('/food-partner/register', authController.registerFoodPartner);
-router.post('/food-partner/login', authController.loginFoodPartner);
-router.get('/food-partner/logout', authController.logoutFoodPartner);
+// video partner auth APIs
+router.post('/video-partner/register', authController.registerVideoPartner);
+router.post('/video-partner/login', authController.loginVideoPartner);
+router.get('/video-partner/logout', authController.logoutVideoPartner);
 router.get('/session', authController.getSession);
 
 export default router;
